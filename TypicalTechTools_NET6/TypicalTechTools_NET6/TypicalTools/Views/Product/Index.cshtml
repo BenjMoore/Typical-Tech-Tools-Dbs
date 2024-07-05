@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1>Products</h1>
+</div>
+
+<div class="card-container">
+    @foreach(var product in Model) 
+    {      
+        <div class="single-card card shadow">
+                <h2>@product.ProductName</h2>
+                <h3>$@product.ProductPrice</h3>
+                <p>@product.ProductDescription</p>
+                <small>Product Code: @product.ProductCode</small>
+                @Html.ActionLink("Comments", "CommentList", "Comment", new {id = product.ProductCode }, new {@class= "btn btn-primary m-2" })
+        </div>
+    }
+
+</div>
