@@ -222,7 +222,22 @@ namespace TypicalTechTools
                 }
             }
         }
+        public bool RemoveProduct(int productCode)
+        {
+            using (SqlConnection connection = new SqlConnection(dboConnectionString))
+            {
+                connection.Open();
+                string query = "DELETE FROM Products WHERE product_code = @ProductCode";
 
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ProductCode", productCode);
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    return rowsAffected > 0;
+                }
+            }
+        }
         public void UpdateProduct(Product product)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))

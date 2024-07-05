@@ -6,16 +6,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddSession(c =>
+builder.Services.AddSession(options =>
 {
-    c.IdleTimeout = TimeSpan.FromSeconds(120);
-    c.Cookie.HttpOnly = true;
-    c.Cookie.IsEssential = true;
+    options.IdleTimeout = TimeSpan.FromSeconds(120);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddTransient<DataAccessLayer>();
-builder.Services.AddSingleton<DataAccessLayer>();
+builder.Services.AddSingleton<DataAccessLayer>(); // Choose Singleton or Transient, not both
 
 var app = builder.Build();
 
@@ -23,7 +22,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -33,8 +31,6 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSession();
-
-SQLConnector connector = new SQLConnector();
 
 app.UseAuthorization();
 

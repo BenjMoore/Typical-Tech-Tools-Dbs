@@ -17,7 +17,15 @@
 {
     <div class="text-right mb-3">
         @Html.ActionLink("Add New Product", "AddProduct", "Product", new { }, new { @class = "btn btn-primary" })
+        
+        
     </div>
+}
+@if (TempData["AlertMessage"] != null)
+{
+    <script type="text/javascript">
+        alert('@TempData["AlertMessage"]');
+    </script>
 }
 
 <div class="card-container row">

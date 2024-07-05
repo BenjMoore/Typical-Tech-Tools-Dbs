@@ -52,7 +52,10 @@ namespace TypicalTechTools.DataAccess
             _sqlConnector.EditComment(comment);
         }
         #endregion
-
+        public bool RemoveProduct(int productCode) 
+        {
+            return _sqlConnector.RemoveProduct(productCode);
+        }
         #region Comments
 
         public List<Comment> GetCommentsForProduct(string productCode)

@@ -23,14 +23,14 @@ namespace TypicalTools.Controllers
         }
         [HttpGet]
         public IActionResult AddProduct()
-        {            
+        {
             return View();
         }
 
         [HttpPost]
         public IActionResult AddProduct(Product product)
         {
-           
+
             if (ModelState.IsValid)
             {
                 product.UpdatedDate = DateTime.Now;
@@ -39,6 +39,37 @@ namespace TypicalTools.Controllers
             }
             return View(product);
         }
+      /*  [HttpPost]
+        [Route("/RemoveProduct")]
+        public IActionResult RemoveProduct(int productCode)
+        {
+            if (Request.Cookies.TryGetValue("UserID", out string userId))
+            {
+                string authStatus = HttpContext.Session.GetString("AccessLevel");
+                if (!string.IsNullOrEmpty(authStatus) && Convert.ToInt32(authStatus) == 0)
+                {
+                    // User is an admin
+                    bool isRemoved = _Parser.RemoveProduct(productCode);
+
+                    if (isRemoved)
+                    {
+                        TempData["AlertMessage"] = "Product removed successfully.";
+                        return View();
+                    }
+                    else
+                    {
+                        TempData["AlertMessage"] = "Product removal failed.";
+                        return View();
+                    }
+
+                   
+                }
+            }
+
+            TempData["AlertMessage"] = "You are not authorized to remove products.";
+            return RedirectToAction("Index", "Home");
+        }
+      */
 
         [HttpPost]
         public IActionResult Edit(string productCode, decimal productPrice)
