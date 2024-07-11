@@ -1,6 +1,6 @@
 ﻿using TypicalTechTools.Models;
 using System.Collections.Generic;
-
+/* Data Access Middleware for my sql controller */
 namespace TypicalTechTools.DataAccess
 {
     public class DataAccessLayer
@@ -11,6 +11,25 @@ namespace TypicalTechTools.DataAccess
         {
             _sqlConnector = new SQLConnector();
         }
+        #region Warranty
+        public void AddWarrantyFile(FileModel file)
+        {
+            _sqlConnector.AddWarrantyFile(file);
+        }
+        public List<FileModel> GetWarrantyFiles()
+        {
+            return _sqlConnector.GetWarrantyFiles();
+        }
+        public FileModel GetWarrantyFileById(int id)
+        {
+            return _sqlConnector.GetWarrantyFileById(id);
+        }
+        public void DeleteWarrantyFile(int id)
+        {
+            _sqlConnector.DeleteWarrantyFile(id);
+        }
+        #endregion
+        #region User
         public bool ValidateAdminUser(string userName, string passWord)
         {
             return _sqlConnector.ValidateAdminUser(userName, passWord);
@@ -20,8 +39,7 @@ namespace TypicalTechTools.DataAccess
         {
             return _sqlConnector.GetAdminUser(userName);
         }
-
-
+        #endregion
         #region Products
 
         public Product GetProductByCode(string productCode)
@@ -51,11 +69,12 @@ namespace TypicalTechTools.DataAccess
         {
             _sqlConnector.EditComment(comment);
         }
-        #endregion
-        public bool RemoveProduct(int productCode) 
+
+        public bool RemoveProduct(int productCode)
         {
             return _sqlConnector.RemoveProduct(productCode);
         }
+        #endregion
         #region Comments
 
         public List<Comment> GetCommentsForProduct(string productCode)
@@ -73,9 +92,6 @@ namespace TypicalTechTools.DataAccess
             comment.CreatedDate = DateTime.Now;
             _sqlConnector.AddComment(comment);
         }
-
-
-
         public void DeleteComment(int commentId)
         {
             _sqlConnector.DeleteComment(commentId);

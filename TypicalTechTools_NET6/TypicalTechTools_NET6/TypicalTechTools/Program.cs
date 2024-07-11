@@ -14,7 +14,8 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSingleton<DataAccessLayer>(); // Choose Singleton or Transient, not both
+builder.Services.AddSingleton<DataAccessLayer>();
+builder.Services.AddSingleton<SQLConnector>(); // Register SQLConnector
 
 var app = builder.Build();
 

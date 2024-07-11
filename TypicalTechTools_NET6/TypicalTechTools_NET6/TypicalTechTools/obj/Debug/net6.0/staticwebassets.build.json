@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "MyeoWVEqpf5YVj4Yvs4a7NwdDYgwBMiqfPp+QosVb/0=",
+  "Hash": "yARKAF5g7axm+70/++E0z9Lann6f06WkmnlEAyyzNsw=",
   "Source": "TypicalTechTools",
   "BasePath": "_content/TypicalTechTools",
   "Mode": "Default",
@@ -1231,25 +1231,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
-    },
-    {
-      "Identity": "D:\\Git Repos\\ICTDBS507\\TypicalTechTools_NET6\\TypicalTechTools_NET6\\TypicalTechTools\\wwwroot\\Uploads\\TypicalTools_Vaughn.docx",
-      "SourceId": "TypicalTechTools",
-      "SourceType": "Discovered",
-      "ContentRoot": "D:\\Git Repos\\ICTDBS507\\TypicalTechTools_NET6\\TypicalTechTools_NET6\\TypicalTechTools\\wwwroot\\",
-      "BasePath": "_content/TypicalTechTools",
-      "RelativePath": "Uploads/TypicalTools_Vaughn.docx",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Uploads\\TypicalTools_Vaughn.docx"
     }
   ]
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NuGet.Protocol.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -26,11 +27,22 @@ namespace TypicalTechTools
                 connection.Open();
 
                 // Check if tables are empty
-                if (IsTableEmpty(connection, "Comments") && IsTableEmpty(connection, "Products"))
+               
+                if (IsTableEmpty(connection, "Products"))
                 {
-
                     InsertProducts(connection);
+                }
+                if (IsTableEmpty(connection, "Comments"))
+                {
                     InsertComments(connection);
+                }
+                if (IsTableEmpty(connection, "WarrantyFiles"))
+                {
+                    InsertWarrantyFiles(connection);
+                }
+                if (IsTableEmpty(connection, "Login")) 
+                {
+                    InsertUsers(connection);
                 }
             }
         }
@@ -41,6 +53,20 @@ namespace TypicalTechTools
             {
                 int count = (int)command.ExecuteScalar();
                 return count == 0;
+            }
+        }
+        private void InsertUsers(SqlConnection connection)
+        {
+            string query = @"
+            INSERT INTO Login (UserName, Password, AccessLevel)
+            VALUES
+                ('Admin', 'Test', '0'),
+                ('Username', 'Test', '1');
+            ";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.ExecuteNonQuery();
             }
         }
 
@@ -79,6 +105,21 @@ namespace TypicalTechTools
                 command.ExecuteNonQuery();
             }
         }
+        private void InsertWarrantyFiles(SqlConnection connection) 
+        {
+            string query = @"
+            IF NOT EXISTS (SELECT * FROM WarrantyFiles WHERE FileName = 'TypicalTools_Vaughn.docx')
+            BEGIN
+                INSERT INTO WarrantyFiles (FileName, FilePath, UploadedDate)
+                VALUES ('TypicalTools_Vaughn.docx', 'wwwroot/Uploads/TypicalTools_Vaughn.docx', GETDATE());
+            END;"
+            ;
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.ExecuteNonQuery();
+            }
+        }
         public void InitializeDatabase()
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))
@@ -100,42 +141,55 @@ namespace TypicalTechTools
             {
                 connection.Open();
                 string createTablesQuery = @"
-                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Products' and xtype='U')
-                    BEGIN
-                        CREATE TABLE Products (
-                            product_code NVARCHAR(50) PRIMARY KEY,
-                            product_name NVARCHAR(100),
-                            product_price DECIMAL(18, 2),
-                            product_description NVARCHAR(MAX),
-                            updated_date DATETIME
-                        );
-                    END;
+        IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Products' and xtype='U')
+        BEGIN
+            CREATE TABLE Products (
+                product_code NVARCHAR(50) PRIMARY KEY,
+                product_name NVARCHAR(100),
+                product_price DECIMAL(18, 2),
+                product_description NVARCHAR(MAX),
+                updated_date DATETIME
+            );
+        END;
 
-                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Comments' and xtype='U')
-                    BEGIN
-                        CREATE TABLE Comments (
-                            commentId INT PRIMARY KEY IDENTITY,
-                            comment_text NVARCHAR(MAX),
-                            product_code NVARCHAR(50),
-                            session_id NVARCHAR(50),
-                            created_date DATETIME,
-                            FOREIGN KEY (product_code) REFERENCES Products(product_code)
-                        );
-                    END;
+        IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Comments' and xtype='U')
+        BEGIN
+            CREATE TABLE Comments (
+                commentId INT PRIMARY KEY IDENTITY,
+                comment_text NVARCHAR(MAX),
+                product_code NVARCHAR(50),
+                session_id NVARCHAR(50),
+                created_date DATETIME,
+                FOREIGN KEY (product_code) REFERENCES Products(product_code)
+            );
+        END;
 
-                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Login' and xtype='U')
-                    BEGIN
-                        CREATE TABLE Login (
-                            Password NVARCHAR(50)                           
-                        );
-                    END;
-                    ";
+            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='WarrantyFiles' and xtype='U')
+            BEGIN
+                CREATE TABLE WarrantyFiles (
+                    Id INT PRIMARY KEY IDENTITY,
+                    FileName NVARCHAR(255),
+                    FilePath NVARCHAR(255),
+                    UploadedDate DATETIME
+                );
+            END;  
+            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Login' and xtype='U')
+            BEGIN
+                CREATE TABLE Login (
+                    UserID INT PRIMARY KEY IDENTITY,
+                    UserName VARCHAR(50) NOT NULL,
+                    Password VARCHAR(50) NOT NULL,
+                    AccessLevel VARCHAR(50) NOT NULL
+                );
+            END;
+            ";
 
                 using (SqlCommand command = new SqlCommand(createTablesQuery, connection))
                 {
                     command.ExecuteNonQuery();
                 }
             }
+
         }
 
 
@@ -477,6 +531,92 @@ namespace TypicalTechTools
                 }
             }
         }
+
+        public void AddWarrantyFile(FileModel file)
+        {
+            using (var connection = new SqlConnection(dboConnectionString))
+            {
+                string query = "INSERT INTO WarrantyFiles (FileName, FilePath, UploadedDate) VALUES (@FileName, @FilePath, @UploadedDate)";
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@FileName", file.FileName);
+                    command.Parameters.AddWithValue("@FilePath", file.FilePath);
+                    command.Parameters.AddWithValue("@UploadedDate", file.UploadedDate);
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public List<FileModel> GetWarrantyFiles()
+        {
+            var files = new List<FileModel>();
+            using (var connection = new SqlConnection(dboConnectionString))
+            {
+                string query = "SELECT * FROM WarrantyFiles";
+                using (var command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            files.Add(new FileModel
+                            {
+                                Id = reader.GetInt32(0),
+                                FileName = reader.GetString(1),
+                                FilePath = reader.GetString(2),
+                                UploadedDate = reader.GetDateTime(3)
+                            });
+                        }
+                    }
+                }
+            }
+            return files;
+        }
+
+        public FileModel GetWarrantyFileById(int id)
+        {
+            using (var connection = new SqlConnection(dboConnectionString))
+            {
+                string query = "SELECT * FROM WarrantyFiles WHERE Id = @Id";
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new FileModel
+                            {
+                                Id = reader.GetInt32(0),
+                                FileName = reader.GetString(1),
+                                FilePath = reader.GetString(2),
+                                UploadedDate = reader.GetDateTime(3)
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public void DeleteWarrantyFile(int id)
+        {
+            using (var connection = new SqlConnection(dboConnectionString))
+            {
+                string query = "DELETE FROM WarrantyFiles WHERE Id = @Id";
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
+
+
 
