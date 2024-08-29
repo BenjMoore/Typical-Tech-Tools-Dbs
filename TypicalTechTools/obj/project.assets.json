@@ -11190,23 +11190,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Benjamin Moore\\.nuget\\packages\\": {},
+    "C:\\Users\\Ben\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Benjamin Moore\\Github\\ICTPRG4302\\ictdbs\\ICTDBS507\\TypicalTechTools\\TypicalTechTools.csproj",
+      "projectUniqueName": "E:\\OLD WINDOWS\\Git Repos\\Typical-Tech-Tools-\\TypicalTechTools\\TypicalTechTools.csproj",
       "projectName": "TypicalTechTools",
-      "projectPath": "C:\\Users\\Benjamin Moore\\Github\\ICTPRG4302\\ictdbs\\ICTDBS507\\TypicalTechTools\\TypicalTechTools.csproj",
-      "packagesPath": "C:\\Users\\Benjamin Moore\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Benjamin Moore\\Github\\ICTPRG4302\\ictdbs\\ICTDBS507\\TypicalTechTools\\obj\\",
+      "projectPath": "E:\\OLD WINDOWS\\Git Repos\\Typical-Tech-Tools-\\TypicalTechTools\\TypicalTechTools.csproj",
+      "packagesPath": "C:\\Users\\Ben\\.nuget\\packages\\",
+      "outputPath": "E:\\OLD WINDOWS\\Git Repos\\Typical-Tech-Tools-\\TypicalTechTools\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Benjamin Moore\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Ben\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
