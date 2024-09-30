@@ -111,7 +111,7 @@ namespace TypicalTechTools.Controllers
 
         public IActionResult DownloadClaimForm()
         {
-            // Assuming the claim form is the default warranty file
+            
             var warrantyFile = _sqlConnector.GetWarrantyFiles().FirstOrDefault(f => f.FileName == "TypicalTools_Vaughn.docx");
             if (warrantyFile == null)
             {

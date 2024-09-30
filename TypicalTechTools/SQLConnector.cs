@@ -16,11 +16,14 @@ namespace TypicalTechTools
 
         public SQLConnector()
         {
+            // This is for before creation
             this.ConnectionString = "Data Source=localhost;Integrated Security=True;TrustServerCertificate=True";
+            // This is for after
             this.dboConnectionString = "Data Source=localhost;Initial Catalog=TotalTools;Integrated Security=True;TrustServerCertificate=True";
             InitializeDatabase();
             SeedDatabase();
         }
+        // Seed Database if empty
         public void SeedDatabase()
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
@@ -48,6 +51,7 @@ namespace TypicalTechTools
                 }
             }
         }
+        // Flag to check if the table is empty
         private bool IsTableEmpty(SqlConnection connection, string tableName)
         {
             string query = $"SELECT COUNT(*) FROM {tableName}";
@@ -57,6 +61,8 @@ namespace TypicalTechTools
                 return count == 0;
             }
         }
+        // insert sql function to insert Users if null
+
         private void InsertUsers(SqlConnection connection)
         {
             string adminPassword = BCrypt.Net.BCrypt.HashPassword("Test");
@@ -77,6 +83,8 @@ namespace TypicalTechTools
                 command.ExecuteNonQuery();
             }
         }
+        // insert sql function to insert Comments if null
+
         private void InsertComments(SqlConnection connection)
         {
             string query = @"
@@ -93,6 +101,7 @@ namespace TypicalTechTools
                 command.ExecuteNonQuery();
             }
         }
+        // insert sql function to insert Products if null
 
         private void InsertProducts(SqlConnection connection)
         {
@@ -112,6 +121,7 @@ namespace TypicalTechTools
                 command.ExecuteNonQuery();
             }
         }
+        // insert sql function to insert warantee files if null
         private void InsertWarrantyFiles(SqlConnection connection)
         {
             string query = @"
@@ -127,6 +137,7 @@ namespace TypicalTechTools
                 command.ExecuteNonQuery();
             }
         }
+        // Initialises and creates database and tables
         public void InitializeDatabase()
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))
@@ -199,7 +210,7 @@ namespace TypicalTechTools
                 }
             }
         }
-
+        // Validates user credentials 
         public bool ValidateAdminUser(string username, string password)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
@@ -224,7 +235,7 @@ namespace TypicalTechTools
 
             return false;
         }
-
+        // gets admin user returns DTO AdminUser
         public AdminUser GetAdminUser(string username)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
@@ -254,7 +265,7 @@ namespace TypicalTechTools
 
             return null; // Return null if the user is not found
         }
-
+        // Creates new user, isnt currently in use but works 
         public void CreateAdminUser(AdminUser user)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
@@ -276,8 +287,8 @@ namespace TypicalTechTools
         }
     
 
-
-public void AddProduct(Product product)
+        // add product
+        public void AddProduct(Product product)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
             {
@@ -297,6 +308,7 @@ public void AddProduct(Product product)
                 }
             }
         }
+        // remove product 
         public bool RemoveProduct(int productCode)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
@@ -313,6 +325,7 @@ public void AddProduct(Product product)
                 }
             }
         }
+        // Update product code
         public void UpdateProduct(Product product)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
@@ -337,6 +350,7 @@ public void AddProduct(Product product)
                 }
             }
         }
+        // Get Product By product code 
         public Product GetProductByCode(string productCode)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
@@ -370,7 +384,7 @@ public void AddProduct(Product product)
                 }
             }
         }
-
+        // Get Single Product
         public Product GetProduct(string productCode)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
@@ -399,7 +413,7 @@ public void AddProduct(Product product)
             }
             return null;
         }
-
+        // Gets All Products, returnts list of type product
         public List<Product> GetAllProducts()
         {
             var products = new List<Product>();
@@ -429,6 +443,8 @@ public void AddProduct(Product product)
             }
             return products;
         }
+
+        // adds comment, takes dto comment
         public void AddComment(Comment comment)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
@@ -461,6 +477,7 @@ public void AddProduct(Product product)
                 }
             }
         }
+        // Gets the comments of a product and returns to a list of type comment
         public List<Comment> GetCommentsForProduct(string productCode)
         {
             var comments = new List<Comment>();
@@ -490,7 +507,7 @@ public void AddProduct(Product product)
             }
             return comments;
         }
-
+        //Edit comment Takes DTO Comment
         public void EditComment(Comment comment)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
@@ -510,7 +527,7 @@ public void AddProduct(Product product)
                 }
             }
         }
-
+        // Get Comment By ID
         public Comment GetComment(int commentId)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
@@ -539,6 +556,7 @@ public void AddProduct(Product product)
             return null;
         }
 
+        // Deletes comment by ID
         public void DeleteComment(int commentId)
         {
             using (SqlConnection connection = new SqlConnection(dboConnectionString))
@@ -553,6 +571,7 @@ public void AddProduct(Product product)
             }
         }
 
+        // Adds a Waranty File
         public void AddWarrantyFile(FileModel file)
         {
             using (var connection = new SqlConnection(dboConnectionString))
@@ -569,6 +588,7 @@ public void AddProduct(Product product)
             }
         }
 
+        // Returns a List of type FileModel with all current warantee files
         public List<FileModel> GetWarrantyFiles()
         {
             var files = new List<FileModel>();
@@ -596,6 +616,7 @@ public void AddProduct(Product product)
             return files;
         }
 
+        // Gets Warranty File By ID
         public FileModel GetWarrantyFileById(int id)
         {
             using (var connection = new SqlConnection(dboConnectionString))
@@ -623,6 +644,7 @@ public void AddProduct(Product product)
             return null;
         }
 
+        // Deletes Warranty File
         public void DeleteWarrantyFile(int id)
         {
             using (var connection = new SqlConnection(dboConnectionString))

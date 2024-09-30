@@ -24,7 +24,7 @@
             <form asp-action="AddProduct" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
-                    <label asp-for="ProductCode" class="control-label"></label>
+                    <label asp-for="ProductCode" class="control-label"></label>This must be not in use by another product
                     <input asp-for="ProductCode" class="form-control" />
                     <span asp-validation-for="ProductCode" class="text-danger"></span>
                 </div>
