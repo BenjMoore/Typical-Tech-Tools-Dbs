@@ -15,6 +15,7 @@ namespace TypicalTechTools.Controllers
 
         public IActionResult Index()
         {
+            
             return View();
         }
 

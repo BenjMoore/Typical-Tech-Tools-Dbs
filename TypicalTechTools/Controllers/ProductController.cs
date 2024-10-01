@@ -4,89 +4,88 @@ using TypicalTechTools.DataAccess;
 using TypicalTechTools.Models;
 using System;
 
-namespace TypicalTools.Controllers
+namespace TypicalTechTools.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly DataAccessLayer _Parser;
+        private readonly DataAccessLayer _parser;
 
         public ProductController(DataAccessLayer parser)
         {
-            _Parser = parser;
+            _parser = parser;
+        }
+
+        private bool SetUserCookies()
+        {
+            var cookie = Request.Cookies["UserID"];
+            if (cookie == null)
+            {
+                var options = new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(120),
+                    Secure = true,
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.Strict
+                };
+                var userId = Guid.NewGuid().ToString();
+                int accessLevel = 1;
+
+                Response.Cookies.Append("UserID", userId, options);
+                Response.Cookies.Append("Authenticated", "False", options);
+                Response.Cookies.Append("AccessLevel", accessLevel.ToString(), options);
+
+                return true;
+            }
+            return false;
         }
 
         // Show all products
         public IActionResult Index()
         {
-            var products = _Parser.GetProducts();
+            SetUserCookies();
+            var products = _parser.GetProducts();
             return View(products);
         }
+
         [HttpGet]
         public IActionResult AddProduct()
         {
             return View();
         }
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult AddProduct(Product product)
         {
-
             if (ModelState.IsValid)
             {
                 product.UpdatedDate = DateTime.Now;
-                _Parser.AddProduct(product);
+                _parser.AddProduct(product);
                 return RedirectToAction("Index");
             }
             return View(product);
         }
-      /*  [HttpPost]
-        [Route("/RemoveProduct")]
-        public IActionResult RemoveProduct(int productCode)
-        {
-            if (Request.Cookies.TryGetValue("UserID", out string userId))
-            {
-                string authStatus = HttpContext.Session.GetString("AccessLevel");
-                if (!string.IsNullOrEmpty(authStatus) && Convert.ToInt32(authStatus) == 0)
-                {
-                    // User is an admin
-                    bool isRemoved = _Parser.RemoveProduct(productCode);
-
-                    if (isRemoved)
-                    {
-                        TempData["AlertMessage"] = "Product removed successfully.";
-                        return View();
-                    }
-                    else
-                    {
-                        TempData["AlertMessage"] = "Product removal failed.";
-                        return View();
-                    }
-
-                   
-                }
-            }
-
-            TempData["AlertMessage"] = "You are not authorized to remove products.";
-            return RedirectToAction("Index", "Home");
-        }
-      */
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult Edit(string productCode, decimal productPrice)
+        public IActionResult Edit(Product product)
         {
             // Check if the user is authenticated and has admin access
             if (Request.Cookies["Authenticated"] != "True" || int.Parse(Request.Cookies["AccessLevel"]) != 0)
             {
-                return Unauthorized(); // Only allow access if authenticated and access level is 0 (admin)
+                return Unauthorized(); 
             }
 
-            var product = _Parser.GetProductByCode(productCode);
-            if (product != null)
+            if (ModelState.IsValid)
             {
-                product.ProductPrice = productPrice;
-                product.UpdatedDate = DateTime.Now;
-                _Parser.UpdateProduct(product);
+                var existingProduct = _parser.GetProductByCode(product.ProductCode);
+                if (existingProduct != null)
+                {
+                    existingProduct.ProductPrice = product.ProductPrice;
+                    existingProduct.UpdatedDate = DateTime.Now;
+                    _parser.UpdateProduct(existingProduct);
+                }
+                return RedirectToAction("Index");
             }
+
             return RedirectToAction("Index");
         }
 

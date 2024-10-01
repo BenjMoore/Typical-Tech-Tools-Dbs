@@ -20,7 +20,7 @@ namespace TypicalTechTools.Controllers
         {
             return View();
         }
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult AdminLogin(AdminUser user)
         {
@@ -29,6 +29,15 @@ namespace TypicalTechTools.Controllers
             {
                 var adminUser = _dataAccessLayer.GetAdminUser(user.UserName);
 
+                // Remove or update existing cookies before setting new admin cookies
+                if (Request.Cookies["UserID"] != null)
+                {
+                    Response.Cookies.Delete("Authenticated");
+                    Response.Cookies.Delete("UserID");
+                    Response.Cookies.Delete("AccessLevel");
+                }
+
+                // Set new admin user cookies
                 CookieOptions options = new CookieOptions
                 {
                     Expires = DateTime.Now.AddMinutes(30)
@@ -44,6 +53,8 @@ namespace TypicalTechTools.Controllers
             return View(user);
         }
 
+
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult Logout()
         {

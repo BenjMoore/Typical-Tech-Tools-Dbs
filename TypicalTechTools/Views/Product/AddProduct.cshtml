@@ -8,6 +8,7 @@
     if (Convert.ToInt32(authStatus) == 0)
     {
         loggedIn = 0;
+        @Html.AntiForgeryToken()
     }
     else
     {

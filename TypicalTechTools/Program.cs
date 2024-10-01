@@ -1,6 +1,7 @@
 using System;
 using System.Security.Cryptography;
 using TypicalTechTools;
+using TypicalTechTools.Controllers;
 using TypicalTechTools.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;

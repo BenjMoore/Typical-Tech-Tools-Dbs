@@ -1,6 +1,7 @@
 ﻿@model ErrorViewModel
 @{
     ViewData["Title"] = "Error";
+    @Html.AntiForgeryToken()
 }
 
 <h1 class="text-danger">Error.</h1>

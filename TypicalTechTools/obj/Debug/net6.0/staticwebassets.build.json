@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "XC1VHMKuj9UmI6lZfQhUBUWrN9gHDLHghbEcXFZ3b+M=",
+  "Hash": "uXMWRyZnaTW5zwgmmu2Kvj2FRhM1xvDnEA4A64yVYKY=",
   "Source": "TypicalTechTools",
   "BasePath": "_content/TypicalTechTools",
   "Mode": "Default",
@@ -1231,25 +1231,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
-    },
-    {
-      "Identity": "C:\\Users\\moore\\OneDrive\\Documents\\GitHub\\Typical-Tech-Tools-\\TypicalTechTools\\wwwroot\\Uploads\\connectionstring.txt",
-      "SourceId": "TypicalTechTools",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moore\\OneDrive\\Documents\\GitHub\\Typical-Tech-Tools-\\TypicalTechTools\\wwwroot\\",
-      "BasePath": "_content/TypicalTechTools",
-      "RelativePath": "Uploads/connectionstring.txt",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Uploads\\connectionstring.txt"
     },
     {
       "Identity": "C:\\Users\\moore\\OneDrive\\Documents\\GitHub\\Typical-Tech-Tools-\\TypicalTechTools\\wwwroot\\Uploads\\TypicalTools_Vaughn.docx",

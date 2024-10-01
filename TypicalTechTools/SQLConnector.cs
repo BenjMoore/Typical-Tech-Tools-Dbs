@@ -1,4 +1,5 @@
-﻿using NuGet.Protocol.Plugins;
+﻿using Azure;
+using NuGet.Protocol.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -51,7 +52,7 @@ namespace TypicalTechTools
                 }
             }
         }
-
+        
         // Flag to check if the table is empty
         private bool IsTableEmpty(SqlConnection connection, string tableName)
         {
@@ -254,7 +255,7 @@ namespace TypicalTechTools
                             {
                                 UserName = reader["UserName"].ToString(),
                                 Password = reader["Password"].ToString(),
-                                UserID = Convert.ToInt32(reader["UserID"]),
+                                UserID = reader["UserID"].ToString(),
                                 AccessLevel = Convert.ToInt32(reader["AccessLevel"])
                             };
                         }

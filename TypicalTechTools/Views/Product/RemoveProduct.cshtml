@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Remove Product";
     int loggedIn = 1;
+    @Html.AntiForgeryToken()
     // Retrieve the authentication status from the session
     string authStatus = Context.Session.GetString("AccessLevel");
     if (Convert.ToInt32(authStatus) == 0)

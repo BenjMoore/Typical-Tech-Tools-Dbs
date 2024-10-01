@@ -11,6 +11,7 @@ namespace TypicalTechTools.Controllers
         public WarrantyController(IWebHostEnvironment _environment)
         {
             Environment = _environment;
+
         }
 
         public IActionResult Index()
@@ -25,6 +26,7 @@ namespace TypicalTechTools.Controllers
             return View();
         }
 
+        
         public IActionResult Upload(IFormFile file)
         {
             //Check to see if there already is a file in the system with the same name.
@@ -69,7 +71,8 @@ namespace TypicalTechTools.Controllers
             //Send the File to Download.
             return File(bytes, "application/octet-stream", Path.GetFileName(filePath));
         }
-
+        
+        [HttpGet]
         public IActionResult DownloadFile(string filePath)
         {
             //Read the File data into Byte Array.
@@ -78,7 +81,7 @@ namespace TypicalTechTools.Controllers
             //Send the File to Download.
             return File(bytes, "application/octet-stream", Path.GetFileName(filePath));
         }
-
+       
         public IActionResult Delete(string filePath)
         {
             //Creates an anonymous object list where each entry holds 2 values, the filename and the filepath.

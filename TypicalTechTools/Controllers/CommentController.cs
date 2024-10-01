@@ -1,11 +1,7 @@
-﻿using TypicalTechTools.DataAccess;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using TypicalTechTools.DataAccess;
 using TypicalTechTools.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace TypicalTools.Controllers
 {
@@ -20,6 +16,7 @@ namespace TypicalTools.Controllers
             _logger = logger;
 
         }
+        
         [HttpGet]
         public IActionResult CommentList(string productCode)
         {
@@ -42,54 +39,58 @@ namespace TypicalTools.Controllers
             {
                 return RedirectToAction("Index", "Product");
             }
-
-            var comment = new Comment
+            if (ModelState.IsValid)
             {
-                ProductCode = productCode
-            };
+                var comment = new Comment
+                {
+                    ProductCode = productCode
+                };
 
-            return View(comment);
+                return View(comment);
+            }
+            return RedirectToAction("CommentList", "Comment");
         }
-        [HttpPost]
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult AddComment(Comment comment)
         {
             // Retrieve the UserID from the cookie
             string userIdCookie = Request.Cookies["UserID"];
             comment.ProductCode = HttpContext.Session.GetString("ProductCode");
-            if (string.IsNullOrEmpty(userIdCookie))
+            if (ModelState.IsValid)
             {
-                // Handle the case where the user ID is not found in the cookie
-                ModelState.AddModelError("", "User is not authenticated.");
+                if (string.IsNullOrEmpty(userIdCookie))
+                {
+                    // Handle the case where the user ID is not found in the cookie
+                    ModelState.AddModelError("", "User is not authenticated.");
+                    return View(comment);
+                }
+
+                if (userIdCookie.IsNullOrEmpty())
+                {
+                    // Handle the case where the UserID cookie value is invalid
+                    ModelState.AddModelError("", "Invalid user ID.");
+                    return View(comment);
+                }
+
+                // Set the UserID in the comment model
+                comment.UserID = userIdCookie;
+                comment.CreatedDate = DateTime.Now;
+                // Insert the comment into the database
+                try
+                {
+                    _DBAccess.AddComment(comment);
+                    return RedirectToAction("CommentList", new { productCode = comment.ProductCode });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Error adding comment: " + ex.Message);
+                }
+
+
                 return View(comment);
             }
-
-            if (!int.TryParse(userIdCookie, out int userId))
-            {
-                // Handle the case where the UserID cookie value is invalid
-                ModelState.AddModelError("", "Invalid user ID.");
-                return View(comment);
-            }
-
-            // Set the UserID in the comment model
-            comment.UserID = Convert.ToString(userId);
-            comment.CreatedDate = DateTime.Now;
-
-            // Insert the comment into the database
-
-            try
-            {
-                _DBAccess.AddComment(comment);
-                return RedirectToAction("CommentList", new { productCode = comment.ProductCode });
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", "Error adding comment: " + ex.Message);
-            }
-
-
-            return View(comment);
+            return RedirectToAction("CommentList", comment.ProductCode);
         }
         [HttpGet]
         public IActionResult EditComment(int commentId)
@@ -117,56 +118,60 @@ namespace TypicalTools.Controllers
                 return RedirectToAction("CommentList");
             }
         }
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult SaveEdit(Comment comment)
         {
-            if (comment == null)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", "Product");
+                if (comment == null)
+                {
+                    return RedirectToAction("Index", "Product");
+                }
+
+                string authStatus = HttpContext.Session.GetString("Authenticated");
+                bool isAdmin = !string.IsNullOrWhiteSpace(authStatus) && authStatus.Equals("True");
+
+                if (comment.CommentText != null)
+                {
+                    _DBAccess.EditComment(comment);
+                }
+
+                return RedirectToAction("CommentList", new { productCode = comment.ProductCode });
             }
-
-            string authStatus = HttpContext.Session.GetString("Authenticated");
-            bool isAdmin = !string.IsNullOrWhiteSpace(authStatus) && authStatus.Equals("True");
-
-            if (comment.CommentText != null)
-            {
-                _DBAccess.EditComment(comment);
-            }
-
-            return RedirectToAction("CommentList", new { productCode = comment.ProductCode });
+            return RedirectToAction("Index", "Product");
         }
 
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult RemoveComment(int commentId)
         {
             Request.Cookies.TryGetValue("AccessLevel", out string accessLevel);
-
-            if (Request.Cookies.TryGetValue("UserID", out string userId))
+            if (ModelState.IsValid)
             {
-                Comment comment = _DBAccess.GetComment(commentId);
-                if (Convert.ToInt32(accessLevel) == 0)
+                if (Request.Cookies.TryGetValue("UserID", out string userId))
                 {
+                    Comment comment = _DBAccess.GetComment(commentId);
+                    if (Convert.ToInt32(accessLevel) == 0)
+                    {
+                        _DBAccess.DeleteComment(commentId);
+                        return RedirectToAction("CommentList", new { productCode = comment.ProductCode });
+                    }
+                    else if (comment == null || comment.UserID != userId)
+                    {
+                        TempData["AlertMessage"] = "You are not authorized to remove this comment.";
+                        return RedirectToAction("CommentList", new { productCode = comment?.ProductCode });
+                    }
                     _DBAccess.DeleteComment(commentId);
                     return RedirectToAction("CommentList", new { productCode = comment.ProductCode });
                 }
-                else if (comment == null || comment.UserID != userId)
+                else
                 {
-                    TempData["AlertMessage"] = "You are not authorized to remove this comment.";
-                    return RedirectToAction("CommentList", new { productCode = comment?.ProductCode });
+                    TempData["AlertMessage"] = "User Not Logged in";
+                    return RedirectToAction("CommentList");
                 }
-
-
-                _DBAccess.DeleteComment(commentId);
-                return RedirectToAction("CommentList", new { productCode = comment.ProductCode });
             }
-            else
-            {
-                TempData["AlertMessage"] = "User Not Logged in";
-                return RedirectToAction("CommentList");
-            }
-
+            return RedirectToAction("CommentList");
         }
     }
 }
