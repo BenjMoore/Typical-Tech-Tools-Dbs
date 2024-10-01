@@ -51,6 +51,7 @@ namespace TypicalTechTools
                 }
             }
         }
+
         // Flag to check if the table is empty
         private bool IsTableEmpty(SqlConnection connection, string tableName)
         {
@@ -66,19 +67,18 @@ namespace TypicalTechTools
         private void InsertUsers(SqlConnection connection)
         {
             string adminPassword = BCrypt.Net.BCrypt.HashPassword("Test");
-            string userPassword = BCrypt.Net.BCrypt.HashPassword("Test");
+            //string userPassword = BCrypt.Net.BCrypt.HashPassword("Test");
 
             string query = @"
             INSERT INTO Login (UserName, Password, AccessLevel)
             VALUES
-                ('Admin', @AdminPassword, '0'),
-                ('Username', @UserPassword, '1');
+                ('Admin', @AdminPassword, '0');                
             ";
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@AdminPassword", adminPassword);
-                command.Parameters.AddWithValue("@UserPassword", userPassword);
+                //command.Parameters.AddWithValue("@UserPassword", userPassword);
 
                 command.ExecuteNonQuery();
             }
@@ -102,7 +102,6 @@ namespace TypicalTechTools
             }
         }
         // insert sql function to insert Products if null
-
         private void InsertProducts(SqlConnection connection)
         {
             string query = @"
