@@ -30,6 +30,14 @@ namespace TypicalTechTools.DataAccess
         }
         #endregion
         #region User
+        public void AddUser(AdminUser user)
+        {
+            _sqlConnector.AddUser(user);
+        }
+        public bool CheckUserExists(string username)
+        {
+            return _sqlConnector.CheckUserExists(username);
+        }
         public bool ValidateAdminUser(string userName, string passWord)
         {
             return _sqlConnector.ValidateAdminUser(userName, passWord);

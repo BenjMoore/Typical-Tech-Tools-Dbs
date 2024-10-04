@@ -50,13 +50,14 @@ namespace TypicalTools.Controllers
             }
             return RedirectToAction("CommentList", "Comment");
         }
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult AddComment(Comment comment)
         {
             // Retrieve the UserID from the cookie
             string userIdCookie = Request.Cookies["UserID"];
             comment.ProductCode = HttpContext.Session.GetString("ProductCode");
+            comment.UserID = userIdCookie;
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrEmpty(userIdCookie))

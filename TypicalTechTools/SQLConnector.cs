@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using TypicalTechTools.DataAccess;
 using TypicalTechTools.Models;
 
@@ -235,6 +236,46 @@ namespace TypicalTechTools
 
             return false;
         }
+
+        public bool CheckUserExists(string username)
+        {
+            using (SqlConnection connection = new SqlConnection(dboConnectionString))
+            {
+                connection.Open();
+                string query = "SELECT COUNT(1) FROM Login WHERE UserName = @UserName";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@UserName", username);
+                    int count = Convert.ToInt32(command.ExecuteScalar());
+
+                    return count > 0; // If count is greater than 0, the user exists
+                }
+            }
+        }
+
+        public void AddUser(AdminUser user)
+        {
+            // Hash the password before saving (ensure secure storage)
+            byte[] hash = Encrypt.EncryptString(user.Password);
+
+            using (SqlConnection connection = new SqlConnection(dboConnectionString))
+            {
+                connection.Open();
+                string query = "INSERT INTO Login (UserName, Password, AccessLevel) VALUES (@UserName, @Password, @AccessLevel)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@UserName", user.UserName);
+                    command.Parameters.AddWithValue("@Password", hash); // Store the hashed password
+                    command.Parameters.AddWithValue("@AccessLevel","Guest"); // Default access level
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+
         // gets admin user returns DTO AdminUser
         public AdminUser GetAdminUser(string username)
         {

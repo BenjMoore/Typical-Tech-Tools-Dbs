@@ -64,6 +64,35 @@ namespace TypicalTechTools.Controllers
 
             return RedirectToAction("AdminLogin");
         }
+        [HttpGet]
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public IActionResult SignUp(AdminUser user)
+        {
+            if (ModelState.IsValid)
+            {
+                // Check if the username already exists
+                bool userExists = _dataAccessLayer.CheckUserExists(user.UserName);
+                if (userExists)
+                {
+                    ModelState.AddModelError("", "Username already exists");
+                    return View(user);
+                }
+
+                // Create the new admin user
+                _dataAccessLayer.AddUser(user);
+
+                // After successful registration, redirect to the login page
+                return RedirectToAction("AdminLogin");
+            }
+
+            return View(user);
+        }
 
         [HttpGet]
         public IActionResult AdminDashboard()

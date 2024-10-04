@@ -36,6 +36,7 @@ else
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <input type="submit" value="SignUp" class="btn btn-primary" formaction="@Url.Action("SignUp", "Admin")" />
                     <input type="submit" value="Login" class="btn btn-primary" />
                 </div>
             </form>
