@@ -21,7 +21,7 @@ namespace TypicalTechTools
             // This is for before creation
             this.ConnectionString = "Data Source=localhost;Integrated Security=True;TrustServerCertificate=True";
             // This is for after
-            this.dboConnectionString = "Data Source=localhost;Initial Catalog=TotalTools;Integrated Security=True;TrustServerCertificate=True";
+            this.dboConnectionString = "Data Source=localhost;Initial Catalog=TypicalTechTools;Integrated Security=True;TrustServerCertificate=True";
             InitializeDatabase();
             SeedDatabase();
         }
@@ -41,11 +41,7 @@ namespace TypicalTechTools
                 if (IsTableEmpty(connection, "Comments"))
                 {
                     InsertComments(connection);
-                }
-                if (IsTableEmpty(connection, "WarrantyFiles"))
-                {
-                    InsertWarrantyFiles(connection);
-                }
+                }              
 
                 if (IsTableEmpty(connection, "Login"))
                 {
@@ -123,21 +119,7 @@ namespace TypicalTechTools
             }
         }
         // insert sql function to insert warantee files if null
-        private void InsertWarrantyFiles(SqlConnection connection)
-        {
-            string query = @"
-            IF NOT EXISTS (SELECT * FROM WarrantyFiles WHERE FileName = 'TypicalTools_Vaughn.docx')
-            BEGIN
-                INSERT INTO WarrantyFiles (FileName, FilePath, UploadedDate)
-                VALUES ('TypicalTools_Vaughn.docx', 'wwwroot/Uploads/TypicalTools_Vaughn.docx', GETDATE());
-            END;"
-            ;
-
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.ExecuteNonQuery();
-            }
-        }
+        
         // Initialises and creates database and tables
         public void InitializeDatabase()
         {
@@ -145,9 +127,9 @@ namespace TypicalTechTools
             {
                 connection.Open();
                 string createDatabaseQuery = @"
-                    IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'TotalTools')
+                    IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'TypicalTechTools')
                     BEGIN
-                        CREATE DATABASE TotalTools;
+                        CREATE DATABASE TypicalTechTools;
                     END";
 
                 using (SqlCommand command = new SqlCommand(createDatabaseQuery, connection))
@@ -183,15 +165,6 @@ namespace TypicalTechTools
             );
         END;
 
-            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='WarrantyFiles' and xtype='U')
-            BEGIN
-                CREATE TABLE WarrantyFiles (
-                    Id INT PRIMARY KEY IDENTITY,
-                    FileName NVARCHAR(255),
-                    FilePath NVARCHAR(255),
-                    UploadedDate DATETIME
-                );
-            END;  
            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Login' and xtype='U')
                 BEGIN
                     CREATE TABLE Login (

@@ -87,11 +87,8 @@ namespace TypicalTools.Controllers
                 {
                     ModelState.AddModelError("", "Error adding comment: " + ex.Message);
                 }
-
-
-                return View(comment);
-            //}
-            return RedirectToAction("CommentList", comment.ProductCode);
+                return View();
+            //}           
         }
         [HttpGet]
         public IActionResult EditComment(int commentId)
