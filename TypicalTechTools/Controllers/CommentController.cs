@@ -50,7 +50,7 @@ namespace TypicalTools.Controllers
             }
             return RedirectToAction("CommentList", "Comment");
         }
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult AddComment(Comment comment)
         {
@@ -58,8 +58,8 @@ namespace TypicalTools.Controllers
             string userIdCookie = Request.Cookies["UserID"];
             comment.ProductCode = HttpContext.Session.GetString("ProductCode");
             comment.UserID = userIdCookie;
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 if (string.IsNullOrEmpty(userIdCookie))
                 {
                     // Handle the case where the user ID is not found in the cookie
@@ -81,7 +81,7 @@ namespace TypicalTools.Controllers
                 try
                 {
                     _DBAccess.AddComment(comment);
-                    return RedirectToAction("CommentList", new { productCode = comment.ProductCode });
+                    return View(comment);
                 }
                 catch (Exception ex)
                 {
@@ -90,7 +90,7 @@ namespace TypicalTools.Controllers
 
 
                 return View(comment);
-            }
+            //}
             return RedirectToAction("CommentList", comment.ProductCode);
         }
         [HttpGet]
