@@ -81,7 +81,8 @@ namespace TypicalTools.Controllers
                 try
                 {
                     _DBAccess.AddComment(comment);
-                    return View(comment);
+                    return RedirectToAction("CommentList", "Comment", new { productCode = comment.ProductCode });
+
                 }
                 catch (Exception ex)
                 {
@@ -120,6 +121,17 @@ namespace TypicalTools.Controllers
         [HttpPost]
         public IActionResult SaveEdit(Comment comment)
         {
+            // Retrieve the UserID from the cookie and assign it to the model
+            string userIdCookie = Request.Cookies["UserID"];
+            comment.UserID = userIdCookie;
+          
+            // Remove the existing model error for UserID (if any)
+            if (!string.IsNullOrEmpty(userIdCookie))
+            {
+                ModelState.Remove("UserID");
+            }
+
+            // Revalidate the model state
             if (ModelState.IsValid)
             {
                 if (comment == null)
@@ -135,7 +147,7 @@ namespace TypicalTools.Controllers
                     _DBAccess.EditComment(comment);
                 }
 
-                return RedirectToAction("CommentList", new { productCode = comment.ProductCode });
+                return RedirectToAction("CommentList", "Comment", new { productCode = comment.ProductCode });
             }
             return RedirectToAction("Index", "Product");
         }
