@@ -8,11 +8,11 @@ namespace TypicalTechTools.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly DataAccessLayer _dataAccessLayer;
+        private readonly DataAccessLayer DBAccess;
 
         public AdminController(DataAccessLayer sQLConnector)
         {
-            _dataAccessLayer = sQLConnector;
+            DBAccess = sQLConnector;
         }
 
         [HttpGet]
@@ -24,10 +24,10 @@ namespace TypicalTechTools.Controllers
         [HttpPost]
         public IActionResult AdminLogin(AdminUser user)
         {
-            bool userAuthorised = _dataAccessLayer.ValidateAdminUser(user.UserName, user.Password);
+            bool userAuthorised = DBAccess.ValidateAdminUser(user.UserName, user.Password);
             if (userAuthorised)
             {
-                var adminUser = _dataAccessLayer.GetAdminUser(user.UserName);
+                var adminUser = DBAccess.GetAdminUser(user.UserName);
 
                 // Remove or update existing cookies before setting new admin cookies
                 if (Request.Cookies["UserID"] != null)
@@ -64,7 +64,7 @@ namespace TypicalTechTools.Controllers
 
             return RedirectToAction("AdminLogin");
         }
-        [HttpGet]
+       /* [HttpGet]
         public IActionResult SignUp()
         {
             return View();
@@ -92,7 +92,7 @@ namespace TypicalTechTools.Controllers
             }
 
             return View(user);
-        }
+        }*/
 
         [HttpGet]
         public IActionResult AdminDashboard()

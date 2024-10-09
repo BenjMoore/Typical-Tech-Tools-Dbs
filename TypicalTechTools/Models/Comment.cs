@@ -16,7 +16,7 @@ namespace TypicalTechTools.Models
         public string ProductCode { get; set; }
 
         
-        [Required]
+      
         public string UserID { get; set; }
        
 

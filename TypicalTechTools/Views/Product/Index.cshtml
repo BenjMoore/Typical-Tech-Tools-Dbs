@@ -5,7 +5,6 @@
     // Retrieve the authentication status and access level from the cookies
     string authStatus = Context.Request.Cookies["Authenticated"];
     int? accessLevel = int.TryParse(Context.Request.Cookies["AccessLevel"], out int level) ? level : (int?)null;
-    bool loggedIn = !string.IsNullOrEmpty(authStatus) && authStatus.Equals("True");
     bool isAdmin = accessLevel == 0;
 }
 
@@ -13,11 +12,12 @@
     <h1>Products</h1>
 </div>
 
-@if (loggedIn && isAdmin)
+@if (isAdmin)
 {
     <div class="text-right mb-3">
         @Html.ActionLink("Add New Product", "AddProduct", "Product", new { }, new { @class = "btn btn-primary" })
-        
+        <!-- //@Html.ActionLink("Remove Product", "Remove", "Product", new { }, new { @class = "btn btn-primary" })-->
+
         
     </div>
 }
@@ -40,7 +40,7 @@
             <div>
                 @Html.ActionLink("Comments", "CommentList", "Comment", new { productCode = product.ProductCode }, new { @class = "btn btn-primary m-2" })
             </div>
-            @if (loggedIn && isAdmin)
+            @if (isAdmin)
             {
                 <form asp-action="Edit" asp-controller="Product" method="post" class="mt-2">
                     <input type="hidden" name="ProductCode" value="@product.ProductCode" />
@@ -50,6 +50,7 @@
                     </div>
                     <button type="submit" class="btn btn-success mt-2">Update Price</button>
                 </form>
+               
             }
         </div>
     }

@@ -9,7 +9,7 @@ namespace TypicalTechTools.Models
         [StringLength(50, ErrorMessage = "Product code can't be longer than 50 characters.")]
         public string ProductCode { get; set; }
 
-        [Required(ErrorMessage = "Product name is required.")]
+        
         [StringLength(100, ErrorMessage = "Product name can't be longer than 100 characters.")]
         public string ProductName { get; set; }
 
