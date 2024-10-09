@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using TypicalTechTools.DataAccess;
 using TypicalTechTools.Models;
 
@@ -20,7 +21,7 @@ namespace TypicalTechTools
             // This is for before creation
             this.ConnectionString = "Data Source=localhost;Integrated Security=True;TrustServerCertificate=True";
             // This is for after
-            this.dboConnectionString = "Data Source=localhost;Initial Catalog=TotalTools;Integrated Security=True;TrustServerCertificate=True";
+            this.dboConnectionString = "Data Source=localhost;Initial Catalog=TypicalTechTools;Integrated Security=True;TrustServerCertificate=True";
             InitializeDatabase();
             SeedDatabase();
         }
@@ -40,11 +41,7 @@ namespace TypicalTechTools
                 if (IsTableEmpty(connection, "Comments"))
                 {
                     InsertComments(connection);
-                }
-                if (IsTableEmpty(connection, "WarrantyFiles"))
-                {
-                    InsertWarrantyFiles(connection);
-                }
+                }              
 
                 if (IsTableEmpty(connection, "Login"))
                 {
@@ -122,21 +119,7 @@ namespace TypicalTechTools
             }
         }
         // insert sql function to insert warantee files if null
-        private void InsertWarrantyFiles(SqlConnection connection)
-        {
-            string query = @"
-            IF NOT EXISTS (SELECT * FROM WarrantyFiles WHERE FileName = 'TypicalTools_Vaughn.docx')
-            BEGIN
-                INSERT INTO WarrantyFiles (FileName, FilePath, UploadedDate)
-                VALUES ('TypicalTools_Vaughn.docx', 'wwwroot/Uploads/TypicalTools_Vaughn.docx', GETDATE());
-            END;"
-            ;
-
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.ExecuteNonQuery();
-            }
-        }
+        
         // Initialises and creates database and tables
         public void InitializeDatabase()
         {
@@ -144,9 +127,9 @@ namespace TypicalTechTools
             {
                 connection.Open();
                 string createDatabaseQuery = @"
-                    IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'TotalTools')
+                    IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'TypicalTechTools')
                     BEGIN
-                        CREATE DATABASE TotalTools;
+                        CREATE DATABASE TypicalTechTools;
                     END";
 
                 using (SqlCommand command = new SqlCommand(createDatabaseQuery, connection))
@@ -182,15 +165,6 @@ namespace TypicalTechTools
             );
         END;
 
-            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='WarrantyFiles' and xtype='U')
-            BEGIN
-                CREATE TABLE WarrantyFiles (
-                    Id INT PRIMARY KEY IDENTITY,
-                    FileName NVARCHAR(255),
-                    FilePath NVARCHAR(255),
-                    UploadedDate DATETIME
-                );
-            END;  
            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Login' and xtype='U')
                 BEGIN
                     CREATE TABLE Login (
@@ -235,6 +209,46 @@ namespace TypicalTechTools
 
             return false;
         }
+
+        public bool CheckUserExists(string username)
+        {
+            using (SqlConnection connection = new SqlConnection(dboConnectionString))
+            {
+                connection.Open();
+                string query = "SELECT COUNT(1) FROM Login WHERE UserName = @UserName";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@UserName", username);
+                    int count = Convert.ToInt32(command.ExecuteScalar());
+
+                    return count > 0; // If count is greater than 0, the user exists
+                }
+            }
+        }
+
+        public void AddUser(AdminUser user)
+        {
+            // Hash the password before saving (ensure secure storage)
+            byte[] hash = Encrypt.EncryptString(user.Password);
+
+            using (SqlConnection connection = new SqlConnection(dboConnectionString))
+            {
+                connection.Open();
+                string query = "INSERT INTO Login (UserName, Password, AccessLevel) VALUES (@UserName, @Password, @AccessLevel)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@UserName", user.UserName);
+                    command.Parameters.AddWithValue("@Password", hash); // Store the hashed password
+                    command.Parameters.AddWithValue("@AccessLevel","Guest"); // Default access level
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+
         // gets admin user returns DTO AdminUser
         public AdminUser GetAdminUser(string username)
         {

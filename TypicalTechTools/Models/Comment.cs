@@ -15,12 +15,12 @@ namespace TypicalTechTools.Models
         [Required]
         public string ProductCode { get; set; }
 
-        [StringLength(36, ErrorMessage = "UserID text cannot exceed 36 characters")]
-
+        
+        [Required]
         public string UserID { get; set; }
        
 
-        [Required]
+        
         public DateTime CreatedDate { get; set; }
     }
 }

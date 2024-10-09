@@ -57,8 +57,9 @@ namespace TypicalTools.Controllers
             // Retrieve the UserID from the cookie
             string userIdCookie = Request.Cookies["UserID"];
             comment.ProductCode = HttpContext.Session.GetString("ProductCode");
-            if (ModelState.IsValid)
-            {
+            comment.UserID = userIdCookie;
+            //if (ModelState.IsValid)
+            //{
                 if (string.IsNullOrEmpty(userIdCookie))
                 {
                     // Handle the case where the user ID is not found in the cookie
@@ -80,17 +81,14 @@ namespace TypicalTools.Controllers
                 try
                 {
                     _DBAccess.AddComment(comment);
-                    return RedirectToAction("CommentList", new { productCode = comment.ProductCode });
+                    return View(comment);
                 }
                 catch (Exception ex)
                 {
                     ModelState.AddModelError("", "Error adding comment: " + ex.Message);
                 }
-
-
-                return View(comment);
-            }
-            return RedirectToAction("CommentList", comment.ProductCode);
+                return View();
+            //}           
         }
         [HttpGet]
         public IActionResult EditComment(int commentId)
