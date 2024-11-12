@@ -24,7 +24,7 @@ namespace TypicalTechTools.Controllers
         [HttpPost]
         public IActionResult AdminLogin(AdminUser user)
         {
-            bool userAuthorised = DBAccess.ValidateAdminUser(user.UserName, user.Password);
+            bool userAuthorised = DBAccess.ValidateAdminUser(user.UserName.Trim(), user.Password.Trim());
             if (userAuthorised)
             {
                 var adminUser = DBAccess.GetAdminUser(user.UserName);
