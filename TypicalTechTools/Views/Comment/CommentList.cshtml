@@ -6,6 +6,7 @@
     int productCode = 0;
     string userId = Context.Request.Cookies["UserID"];
     string accessLevel = Context.Request.Cookies["AccessLevel"];
+    string sessionId = Context.Session.Id;
 }
 
 @if (TempData["AlertMessage"] != null)
