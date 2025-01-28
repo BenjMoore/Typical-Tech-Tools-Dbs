@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Benjamin Moore\\Github\\ICTPRG4302\\ictdbs\\ICTDBS507\\TypicalTechTools\\TypicalTechTools.csproj": {}
+    "C:\\Users\\Perl\\Documents\\GitHub\\Typical-Tech-Tools-\\TypicalTechTools\\TypicalTechTools.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Benjamin Moore\\Github\\ICTPRG4302\\ictdbs\\ICTDBS507\\TypicalTechTools\\TypicalTechTools.csproj": {
+    "C:\\Users\\Perl\\Documents\\GitHub\\Typical-Tech-Tools-\\TypicalTechTools\\TypicalTechTools.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Benjamin Moore\\Github\\ICTPRG4302\\ictdbs\\ICTDBS507\\TypicalTechTools\\TypicalTechTools.csproj",
+        "projectUniqueName": "C:\\Users\\Perl\\Documents\\GitHub\\Typical-Tech-Tools-\\TypicalTechTools\\TypicalTechTools.csproj",
         "projectName": "TypicalTechTools",
-        "projectPath": "C:\\Users\\Benjamin Moore\\Github\\ICTPRG4302\\ictdbs\\ICTDBS507\\TypicalTechTools\\TypicalTechTools.csproj",
-        "packagesPath": "C:\\Users\\Benjamin Moore\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Benjamin Moore\\Github\\ICTPRG4302\\ictdbs\\ICTDBS507\\TypicalTechTools\\obj\\",
+        "projectPath": "C:\\Users\\Perl\\Documents\\GitHub\\Typical-Tech-Tools-\\TypicalTechTools\\TypicalTechTools.csproj",
+        "packagesPath": "C:\\Users\\Perl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Perl\\Documents\\GitHub\\Typical-Tech-Tools-\\TypicalTechTools\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Benjamin Moore\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Perl\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -43,8 +42,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
-        }
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net6.0": {
@@ -60,19 +60,15 @@
             },
             "Microsoft.AspNetCore.Http": {
               "target": "Package",
-              "version": "[2.2.2, )"
+              "version": "[2.3.0, )"
             },
             "Microsoft.Data.SqlClient": {
               "target": "Package",
-              "version": "[5.2.1, )"
-            },
-            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
-              "target": "Package",
-              "version": "[6.0.16, )"
+              "version": "[6.0.0, )"
             },
             "System.Data.SqlClient": {
               "target": "Package",
-              "version": "[4.8.6, )"
+              "version": "[4.9.0, )"
             }
           },
           "imports": [
@@ -94,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
